@@ -24,7 +24,7 @@
 # TODO
 
 - [x] Update api key to come from env vars
-- [ ] Create the conditional caching methods eg cache until branch changes
+- [x] Create the conditional caching methods eg cache until branch changes
 - [ ] Error handling
 - [ ] Update docs
 - [ ] Create setup for inserting apikey

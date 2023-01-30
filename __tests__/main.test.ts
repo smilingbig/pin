@@ -14,4 +14,7 @@ describe("main", () => {
   it.todo(
     "should open compare view between current repo and main/master branch"
   );
+  it.todo("should open all merge requests for specified user");
+  it.todo("should open current jira ticket for branch");
+  it.todo("should display help when requested for if commands are incorrect");
 });

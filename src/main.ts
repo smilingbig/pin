@@ -4,6 +4,9 @@ import { Git } from "./git";
 import { Repository } from "./repo";
 import { Logger } from "./logger";
 import { ErrorMessage } from "./errors";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { version } from "../package.json";
 
 const l = new Logger({ debug: true });
 const r = new Repository();
@@ -23,13 +26,14 @@ export async function main(argv: string[]) {
         const project = await gi.projects(
           Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
         );
-        return project.data[0].id;
+        return project[0].id;
       });
 
       const pipelines = await gi.pipelines(projectId, branch);
 
-      if (!pipelines.data.length) return l.error(ErrorMessage.NO_RESULTS);
-      Command.open(pipelines.data[0].web_url);
+      if (!pipelines.length) return l.error(ErrorMessage.NO_RESULTS);
+
+      Command.open(pipelines[0].web_url);
       break;
     }
 
@@ -43,16 +47,22 @@ export async function main(argv: string[]) {
         const project = await gi.projects(
           Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
         );
-        return project.data[0].id;
+        return project[0].id;
       });
 
       const mergeRequests = await gi.mergeRequests(projectId, branch);
 
-      if (!mergeRequests.data.length) return l.error(ErrorMessage.NO_RESULTS);
+      if (!mergeRequests.length) return l.error(ErrorMessage.NO_RESULTS);
 
-      Command.open(mergeRequests.data[0].web_url);
+      Command.open(mergeRequests[0].web_url);
       break;
     }
+
+    case "-v":
+    case "--version":
+    case "version":
+      l.info(version);
+      break;
 
     default:
       l.error(ErrorMessage.UNKNOWN_COMMAND);

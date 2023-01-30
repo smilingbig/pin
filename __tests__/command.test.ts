@@ -23,4 +23,7 @@ describe("Command", () => {
     expect(c.name).toBeUndefined();
     expect(c.opt).toStrictEqual({});
   });
+
+  it.todo("should accept input from stdin");
+  it.todo("should display list of options to select from");
 });

@@ -1,23 +1,16 @@
 import { URL } from "node:url";
 import { join } from "node:path";
-import axios, { AxiosResponse } from "axios";
-import * as dotenv from "dotenv";
-// import { ErrorMessage } from "./errors";
-
-dotenv.config();
+import { get } from "./request";
 
 interface GitlabType {
-  projects: (searchTerm: string) => Promise<AxiosResponse<any, any>>;
+  projects: (searchTerm: string) => Promise<any>;
   mergeRequests: (
     projectId: number,
     userId: string,
     branchName: string
-  ) => Promise<AxiosResponse<any, any>>;
-  user: () => Promise<AxiosResponse<any, any>>;
-  pipelines: (
-    projectId: number,
-    branchName: string
-  ) => Promise<AxiosResponse<any, any>>;
+  ) => Promise<any>;
+  user: () => Promise<any>;
+  pipelines: (projectId: number, branchName: string) => Promise<any>;
 }
 
 export class GitlabIntegration implements GitlabType {
@@ -42,7 +35,7 @@ export class GitlabIntegration implements GitlabType {
   }
 
   public async user() {
-    const result = await axios(this.buildUrl({ pathname: "user" }).href);
+    const result = await get(this.buildUrl({ pathname: "user" }).href);
     return result;
   }
 
@@ -50,7 +43,7 @@ export class GitlabIntegration implements GitlabType {
     const url = this.buildUrl({ pathname: "projects" });
     url.searchParams.append("search", searchTerm);
 
-    return axios(url.href);
+    return get(url.href);
   }
 
   public async mergeRequests(projectId: number, branchName: string) {
@@ -59,7 +52,7 @@ export class GitlabIntegration implements GitlabType {
     });
     url.searchParams.append("source_branch", branchName);
 
-    return axios(url.href);
+    return get(url.href);
   }
 
   public async pipelines(projectId: number, branchName: string) {
@@ -69,6 +62,6 @@ export class GitlabIntegration implements GitlabType {
     url.searchParams.append("ref", branchName);
     url.searchParams.append("order_by", "updated_at");
 
-    return axios(url.href);
+    return get(url.href);
   }
 }

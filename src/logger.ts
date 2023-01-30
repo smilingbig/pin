@@ -24,6 +24,7 @@ export class Logger {
   }
 
   end() {
+    // console.log(JSON.stringify(this.logs));
     appendFileSync(this.logPath, this.logs.join("\n"));
   }
 }
