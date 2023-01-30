@@ -23,6 +23,12 @@
 
 # TODO
 
+- [x] Update main/command to deal with arguments it doesn't recognise
+- [x] Update db to work for multiple repos
+- [x] Need to make sure to sort results from apis
+- [x] Failure cases if no results are found
+- [x] Resolve issue with main branches not working
+- [x] Execution time isn't displaying correctly I don't think
 - [x] Update api key to come from env vars
 - [x] Create the conditional caching methods eg cache until branch changes
 - [ ] Error handling
@@ -32,16 +38,10 @@
 - [ ] Jira integration
 - [ ] Move to a proper db solution, probably sqlite3
 - [ ] Look at using gitlab api graphql
-- [ ] Update main/command to deal with arguments it doesn't recognise
 - [ ] Help menu and other command line defaults to investigate
-- [ ] Need to make sure to sort results from apis
-- [ ] Update db to work for multiple repos
 - [ ] Update console logs to use process.std etc
-- [ ] Failure cases if no results are found
 - [ ] Improve logger to include more useful information
-- [ ] Resolve issue with main branches not working
 - [ ] Update build to happen on dev instead of tests
 - [ ] Write those tests
 - [ ] Need to look into generating types correctly with type declaration file
-- [ ] Execution time isn't displaying correctly I don't think
 - [ ] logging
