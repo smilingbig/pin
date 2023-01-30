@@ -15,7 +15,6 @@ interface GitlabType {
   ) => Promise<AxiosResponse<any, any>>;
   user: () => Promise<AxiosResponse<any, any>>;
   pipelines: (
-    username: string,
     projectId: number,
     branchName: string
   ) => Promise<AxiosResponse<any, any>>;
@@ -54,32 +53,21 @@ export class GitlabIntegration implements GitlabType {
     return axios(url.href);
   }
 
-  public async mergeRequests(
-    projectId: number,
-    userId: string,
-    branchName: string
-  ) {
+  public async mergeRequests(projectId: number, branchName: string) {
     const url = this.buildUrl({
       pathname: `projects/${projectId}/merge_requests`,
     });
-    url.searchParams.append("author_id", userId);
     url.searchParams.append("source_branch", branchName);
 
     return axios(url.href);
   }
 
-  public async pipelines(
-    username: string,
-    projectId: number,
-    branchName: string
-  ) {
+  public async pipelines(projectId: number, branchName: string) {
     const url = this.buildUrl({
       pathname: `projects/${projectId}/pipelines`,
     });
-    url.searchParams.append("username", username);
     url.searchParams.append("ref", branchName);
     url.searchParams.append("order_by", "updated_at");
-    url.searchParams.append("sort", "asc");
 
     return axios(url.href);
   }

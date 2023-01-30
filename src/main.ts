@@ -19,11 +19,6 @@ export async function main(argv: string[]) {
         Git.remoteOriginUrl()
       );
 
-      const username = await r.cacheOr("username", async () => {
-        const user = await gi.user();
-        return user.data.username;
-      });
-
       const projectId = await r.cacheOr("projectId", async () => {
         const project = await gi.projects(
           Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
@@ -31,9 +26,9 @@ export async function main(argv: string[]) {
         return project.data[0].id;
       });
 
-      const pipelines = await gi.pipelines(username, projectId, branch);
+      const pipelines = await gi.pipelines(projectId, branch);
 
-      if (!pipelines.data.length) l.error(ErrorMessage.NO_RESULTS);
+      if (!pipelines.data.length) return l.error(ErrorMessage.NO_RESULTS);
       Command.open(pipelines.data[0].web_url);
       break;
     }
@@ -44,11 +39,6 @@ export async function main(argv: string[]) {
         Git.remoteOriginUrl()
       );
 
-      const userId = await r.cacheOr("userId", async () => {
-        const user = await gi.user();
-        return user.data.id;
-      });
-
       const projectId = await r.cacheOr("projectId", async () => {
         const project = await gi.projects(
           Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
@@ -56,9 +46,10 @@ export async function main(argv: string[]) {
         return project.data[0].id;
       });
 
-      const mergeRequests = await gi.mergeRequests(projectId, userId, branch);
+      const mergeRequests = await gi.mergeRequests(projectId, branch);
 
-      if (!mergeRequests.data.length) l.error(ErrorMessage.NO_RESULTS);
+      if (!mergeRequests.data.length) return l.error(ErrorMessage.NO_RESULTS);
+
       Command.open(mergeRequests.data[0].web_url);
       break;
     }
@@ -67,7 +58,7 @@ export async function main(argv: string[]) {
       l.error(ErrorMessage.UNKNOWN_COMMAND);
   }
 
-  return true;
+  return Promise.resolve();
 }
 
 (async () => {
