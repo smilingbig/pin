@@ -13,11 +13,12 @@ interface RepoType {
 }
 
 export class Repository implements RepoType {
-  dbPath = join(__dirname, "../data/db.json");
+  dbPath: string;
   public db: Database;
 
-  constructor() {
-    const data = readFileSync(this.dbPath).toString("utf-8");
+  constructor(dbPath = "../data/db.json") {
+    this.dbPath = dbPath ? join(__dirname, dbPath) : "";
+    const data = dbPath && readFileSync(this.dbPath).toString("utf-8");
     this.db = JSON.parse(data ? data : "{}");
   }
 
@@ -47,10 +48,10 @@ export class Repository implements RepoType {
   }
 
   private generateKey(query: string) {
-    return process.cwd() + query;
+    return process.cwd() + "_" + query;
   }
 
-  async cacheOr(query: string, callback: () => any) {
+  public async cacheOr(query: string, callback: () => any) {
     if (this.has(query)) return this.query(query);
     else {
       const result = await callback();
