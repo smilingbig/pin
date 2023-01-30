@@ -16,8 +16,7 @@ export class Git {
   }
 
   static projectNameFromRemoteOriginUrl(remoteOriginUrl: string) {
-    const result = remoteOriginUrl.replace(/.*:|\.git|"/g, "");
-    const splitResult = result.split("/");
+    const splitResult = remoteOriginUrl.split("/");
 
     return splitResult[splitResult.length - 1].trim();
   }

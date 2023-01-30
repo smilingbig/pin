@@ -10,6 +10,14 @@ export class Logger {
     this.debug = debug;
   }
 
+  info(log: string) {
+    if (this.debug) {
+      console.log(log);
+    }
+
+    this.logs.push(log);
+  }
+
   error(log: string) {
     this.logs.push(log);
     console.error(log);

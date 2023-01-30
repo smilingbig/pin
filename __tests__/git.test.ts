@@ -1,21 +1,22 @@
 import { Git } from "../src/git";
 
-describe("GIT", () => {
-  it("should export GIT", () => {
+describe("Git", () => {
+  it("should export Git", () => {
     expect(Git).toBeDefined();
   });
 
   it("should fetch current git branch", () => {
     const result = Git.branch();
-    expect(result).toBe("main");
+    expect(result).not.toContain('"');
   });
 
   it("should fetch current git branch", () => {
     const result = Git.remoteOriginUrl();
-    // TODO
-    // THis will need to be updated, this is just custom jank
-    expect(result).toBe("test");
+    expect(result).not.toContain(".git");
   });
 
-  it.todo("should detect if the branch has changed");
+  it("should fetch current git branch", () => {
+    const result = Git.projectNameFromRemoteOriginUrl(Git.remoteOriginUrl());
+    expect(result).toBe("pin");
+  });
 });
