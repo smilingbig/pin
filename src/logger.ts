@@ -4,11 +4,9 @@ import { join } from "node:path";
 export class Logger {
   logPath = join(__dirname, "../data/logs.txt");
   logs: string[] = [];
-  debug = false;
+  public debug = false;
 
-  constructor({ debug }: { debug: boolean }) {
-    this.debug = debug;
-  }
+  // constructor() { }
 
   info(log: string) {
     if (this.debug) {

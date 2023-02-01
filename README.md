@@ -45,3 +45,6 @@
 - [ ] Write those tests
 - [ ] Need to look into generating types correctly with type declaration file
 - [ ] logging
+- [ ] Need to think of a way to abstract concept's for taking input and dealing with conditional querying
+- [ ] Make it possible to select merge requests
+- [ ] Could be cool to do merge requests by author and jump to

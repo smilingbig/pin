@@ -23,8 +23,6 @@ export class Repository implements RepoType {
   }
 
   public end() {
-    console.log("dbpath", this.dbPath);
-    console.log("db", this.db);
     writeFileSync(this.dbPath, JSON.stringify(this.db));
   }
 

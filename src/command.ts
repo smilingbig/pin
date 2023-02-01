@@ -38,7 +38,7 @@ export class Command {
   }
 
   static async selectFrom<T>(list: T[], key: keyof T, extract: keyof T) {
-    Command.log([
+    Command.print([
       Message.MULTIPLE_RESULTS,
       ...list.map((p: T, index) => index + " " + p[key]),
     ]);
@@ -47,12 +47,12 @@ export class Command {
     return list[+index][extract];
   }
 
-  static log(messages: string[]) {
+  static print(messages: string[]) {
     messages.map((x) => console.log(x));
   }
 
   static open(href: string) {
-    Command.log(["opening -> " + href]);
+    Command.print(["opening -> " + href]);
     execSync("open " + href);
   }
 }

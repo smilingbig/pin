@@ -7,14 +7,16 @@ import { ErrorMessage } from "./messages";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { version } from "../package.json";
-import { head, isGreaterThan } from "./utils";
+import { head, isGreaterThan, isEmpty } from "./utils";
 
-const l = new Logger({ debug: true });
 const r = new Repository();
+const l = new Logger();
 
 export async function main(argv: string[]) {
   const c = new Command(argv);
   const gi = new GitlabIntegration();
+
+  l.debug = Boolean(c.opt["debug"]);
 
   switch (c.name) {
     case "pipeline": {
@@ -28,6 +30,8 @@ export async function main(argv: string[]) {
           Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
         );
 
+        if (isEmpty(project)) return Command.print([ErrorMessage.NO_RESULTS]);
+
         return !isGreaterThan(project, 1)
           ? head(project).id
           : await Command.selectFrom(project, "name_with_namespace", "id");
@@ -35,9 +39,9 @@ export async function main(argv: string[]) {
 
       const pipelines = await gi.pipelines(projectId, branch);
 
-      if (!isGreaterThan(pipelines, 0)) return l.error(ErrorMessage.NO_RESULTS);
+      if (isEmpty(pipelines)) return Command.print([ErrorMessage.NO_RESULTS]);
 
-      Command.open(pipelines[0].web_url);
+      Command.open(head(pipelines).web_url);
       break;
     }
 
@@ -52,6 +56,8 @@ export async function main(argv: string[]) {
           Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
         );
 
+        if (isEmpty(project)) return Command.print([ErrorMessage.NO_RESULTS]);
+
         return !isGreaterThan(project, 1)
           ? head(project).id
           : await Command.selectFrom(project, "name_with_namespace", "id");
@@ -59,7 +65,8 @@ export async function main(argv: string[]) {
 
       const mergeRequests = await gi.mergeRequests(projectId, branch);
 
-      if (!mergeRequests.length) return l.error(ErrorMessage.NO_RESULTS);
+      if (isEmpty(mergeRequests))
+        return Command.print([ErrorMessage.NO_RESULTS]);
 
       Command.open(mergeRequests[0].web_url);
       break;
