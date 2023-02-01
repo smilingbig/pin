@@ -1,3 +1,7 @@
+import { Message } from "./messages";
+import * as readline from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
+
 import { execSync } from "node:child_process";
 
 export class Command {
@@ -24,8 +28,31 @@ export class Command {
     }, {});
   }
 
+  static async read(question = "") {
+    const rl = readline.createInterface({ input, output });
+    const answer = await rl.question(question);
+
+    rl.close();
+
+    return answer;
+  }
+
+  static async selectFrom<T>(list: T[], key: keyof T, extract: keyof T) {
+    Command.log([
+      Message.MULTIPLE_RESULTS,
+      ...list.map((p: T, index) => index + " " + p[key]),
+    ]);
+
+    const index = await Command.read();
+    return list[+index][extract];
+  }
+
+  static log(messages: string[]) {
+    messages.map((x) => console.log(x));
+  }
+
   static open(href: string) {
-    console.log("opening " + href);
+    Command.log(["opening -> " + href]);
     execSync("open " + href);
   }
 }

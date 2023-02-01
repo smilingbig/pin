@@ -19,12 +19,14 @@ export class Logger {
   }
 
   error(log: string) {
+    if (this.debug) {
+      console.trace(log);
+    }
+
     this.logs.push(log);
-    console.error(log);
   }
 
   end() {
-    // console.log(JSON.stringify(this.logs));
     appendFileSync(this.logPath, this.logs.join("\n"));
   }
 }

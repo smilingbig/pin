@@ -3,10 +3,11 @@ import { GitlabIntegration } from "./gitlab";
 import { Git } from "./git";
 import { Repository } from "./repo";
 import { Logger } from "./logger";
-import { ErrorMessage } from "./errors";
+import { ErrorMessage } from "./messages";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { version } from "../package.json";
+import { head, isGreaterThan } from "./utils";
 
 const l = new Logger({ debug: true });
 const r = new Repository();
@@ -26,12 +27,15 @@ export async function main(argv: string[]) {
         const project = await gi.projects(
           Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
         );
-        return project[0].id;
+
+        return !isGreaterThan(project, 1)
+          ? head(project).id
+          : await Command.selectFrom(project, "name_with_namespace", "id");
       });
 
       const pipelines = await gi.pipelines(projectId, branch);
 
-      if (!pipelines.length) return l.error(ErrorMessage.NO_RESULTS);
+      if (!isGreaterThan(pipelines, 0)) return l.error(ErrorMessage.NO_RESULTS);
 
       Command.open(pipelines[0].web_url);
       break;
@@ -47,7 +51,10 @@ export async function main(argv: string[]) {
         const project = await gi.projects(
           Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
         );
-        return project[0].id;
+
+        return !isGreaterThan(project, 1)
+          ? head(project).id
+          : await Command.selectFrom(project, "name_with_namespace", "id");
       });
 
       const mergeRequests = await gi.mergeRequests(projectId, branch);
