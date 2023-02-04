@@ -1,5 +1,6 @@
 import { Command } from "./command";
 import { GitlabIntegration } from "./gitlab";
+import { AWSIntegration } from "./aws";
 import { Git } from "./git";
 import { Repository } from "./repo";
 import { Logger } from "./logger";
@@ -15,10 +16,47 @@ const l = new Logger();
 export async function main(argv: string[]) {
   const c = new Command(argv);
   const gi = new GitlabIntegration();
+  const ai = new AWSIntegration({});
 
   l.debug = Boolean(c.opt["debug"]);
 
   switch (c.name) {
+    case "stack": {
+      let stackId: string;
+
+      const branch = Git.branch();
+      const computedKey = "stackName" + branch;
+
+      if (r.has(computedKey)) {
+        const stackName = r.query("stackName");
+
+        const { Stacks } = await ai.stacksByName(stackName);
+
+        stackId = head(Stacks!).StackId!;
+      } else {
+        await r.cacheOr(computedKey, async () => {
+          const { Stacks } = await ai.getAllStacks();
+
+          const stack =
+            Stacks?.find((x) =>
+              x.StackName?.toLowerCase()?.includes(branch.toLowerCase())
+            ) || false;
+
+          if (!stack)
+            return Command.print(["StackName", ErrorMessage.NO_RESULTS]);
+
+          stackId = stack.StackId || "";
+
+          return stack.StackName;
+        });
+      }
+
+      Command.open(
+        "https://eu-west-1.console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/stackinfo?stackId=" +
+          stackId!
+      );
+      break;
+    }
     case "compare": {
       const branchTo = c.opt["branch"];
 

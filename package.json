@@ -61,5 +61,9 @@
   "engines": {
     "node": ">18.0.0",
     "pnpm": ">=6"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.264.0",
+    "@aws-sdk/credential-providers": "^3.264.0"
   }
 }
