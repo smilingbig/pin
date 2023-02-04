@@ -20,4 +20,8 @@ export class Git {
 
     return splitResult[splitResult.length - 1].trim();
   }
+
+  static getUserName(): string {
+    return execSync("git config --get user.email").toString("utf-8").trim();
+  }
 }

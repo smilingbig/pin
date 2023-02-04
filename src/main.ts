@@ -9,6 +9,7 @@ import { ErrorMessage, Message } from "./messages";
 // @ts-ignore
 import { version } from "../package.json";
 import { head, isGreaterThan, isEmpty } from "./utils";
+// import { JiraIntegration } from "./jira";
 
 const r = new Repository();
 const l = new Logger();
@@ -17,10 +18,16 @@ export async function main(argv: string[]) {
   const c = new Command(argv);
   const gi = new GitlabIntegration();
   const ai = new AWSIntegration({});
+  // const ji = new JiraIntegration()
 
   l.debug = Boolean(c.opt["debug"]);
 
   switch (c.name) {
+    // case "story": {
+    //   Not working yet
+    //   const result = ji.ticket('CREO-3963')
+    //   console.log('result', result)
+    // }
     case "stack": {
       let stackId: string;
 
