@@ -3,7 +3,7 @@ import { GitlabIntegration } from "./gitlab";
 import { Git } from "./git";
 import { Repository } from "./repo";
 import { Logger } from "./logger";
-import { ErrorMessage } from "./messages";
+import { ErrorMessage, Message } from "./messages";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { version } from "../package.json";
@@ -19,6 +19,36 @@ export async function main(argv: string[]) {
   l.debug = Boolean(c.opt["debug"]);
 
   switch (c.name) {
+    case "compare": {
+      const branchTo = c.opt["branch"];
+
+      if (!branchTo) return Command.print([Message.REQUIRED_BRANCH]);
+
+      const branchFrom = Git.branch();
+      const remoteOriginUrl = await r.cacheOr("remoteOriginUrl", () =>
+        Git.remoteOriginUrl()
+      );
+
+      const projectId = await r.cacheOr("projectId", async () => {
+        const project = await gi.projects(
+          Git.projectNameFromRemoteOriginUrl(remoteOriginUrl)
+        );
+
+        if (isEmpty(project)) return Command.print([ErrorMessage.NO_RESULTS]);
+
+        return !isGreaterThan(project, 1)
+          ? head(project).id
+          : await Command.selectFrom(project, "name_with_namespace", "id");
+      });
+
+      const result = await gi.compare(projectId, branchFrom, branchTo);
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      Command.open(result!.web_url);
+      break;
+    }
+
     case "pipeline": {
       const branch = Git.branch();
       const remoteOriginUrl = await r.cacheOr("remoteOriginUrl", () =>

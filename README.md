@@ -13,7 +13,7 @@
 
 ## Functional requirements
 
-- [ ] [gitlab] Open current gitlab repo's latest pipeline in gitlab web ui
+- [x] [gitlab] Open current gitlab repo's latest pipeline in gitlab web ui
 - [ ] [gitlab] Same for latest merge request
 - [ ] [gitlab] And also compare with main branch
 - [ ] [gitlab] Open all merge requests for current repo
@@ -48,3 +48,4 @@
 - [ ] Need to think of a way to abstract concept's for taking input and dealing with conditional querying
 - [ ] Make it possible to select merge requests
 - [ ] Could be cool to do merge requests by author and jump to
+- [ ] Add a command for clearing cache

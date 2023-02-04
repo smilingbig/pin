@@ -64,4 +64,14 @@ export class GitlabIntegration implements GitlabType {
 
     return get(url.href);
   }
+
+  public async compare(projectId: string, from: string, to: string) {
+    const url = this.buildUrl({
+      pathname: `projects/${projectId}/repository/compare`,
+    });
+    url.searchParams.append("from", from);
+    url.searchParams.append("to", to);
+
+    return get(url.href);
+  }
 }
